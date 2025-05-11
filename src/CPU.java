@@ -1,7 +1,9 @@
 public class CPU {
 
+    public static final double CYCLE = 1.0/60;
     int[] V = new int[16]; // General purpose registers
     int I, DT, ST; // Index, Delay Timer and Sound Timer registers
+    int PC = 0x200; // Program Counter
 
 
     CPU(){}
