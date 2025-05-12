@@ -15,7 +15,7 @@ public class Memory {
         loadRom(romPath);
     }
 
-    private void loadRom(String romPath){
+    public void loadRom(String romPath){
         try {
             InputStream inputStream = new FileInputStream(romPath);
             int byteCount = 512; //assume the rom starts at 0x200
