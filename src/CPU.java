@@ -8,6 +8,117 @@ public class CPU {
 
     CPU(){}
 
+    public void instruction(int instruction){
+        int opcode = (instruction & 0xF000) >> 12;
+
+        switch (opcode){
+            case 0x0:
+                if((instruction & 0x00FF) == 0xE0) clearScreen(); //00E0
+                else returnFromSubroutine(); //00EE
+                break;
+            case 0x1: //1nnn
+                jumpToAddress(instruction & 0x0FFF);
+                break;
+            case 0x2: //2nnn
+                callSubroutineAtAddress(instruction & 0x0FFF);
+                break;
+            case 0x3: //3xkk
+                skipIfEqualImmediate((instruction & 0x0F00) >> 8, (instruction & 0x00FF));
+                break;
+            case 0x4: //4xkk
+                skipIfNotEqualImmediate((instruction & 0x0F00) >> 8, (instruction & 0x00FF));
+                break;
+            case 0x5: //5xy0
+                skipIfEqualRegister((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                break;
+            case 0x6: //6xkk
+                setValueInRegister((instruction & 0x0F00) >> 8, (instruction & 0x00FF));
+                break;
+            case 0x7: //7xkk
+                addToValueInRegister((instruction & 0x0F00) >> 8, (instruction & 0x00FF));
+                break;
+            case 0x8:
+                switch (instruction & 0x000F){
+                    case 0x0: //8xy0
+                        loadRegister((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                        break;
+                    case 0x1: //8xy1
+                        bitwiseXOR((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                        break;
+                    case 0x2: //8xy2
+                        bitwiseAND((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                        break;
+                    case 0x3: //8xy3
+                        bitwiseXOR((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                        break;
+                    case 0x4: //8xy4
+                        addRegisters((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                        break;
+                    case 0x5: //8xy5
+                        subtractRegYFromRegX((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                        break;
+                    case 0x6: //8xy6
+                        shiftRight((instruction & 0x0F00) >> 8);
+                        break;
+                    case 0x7: //8xy7
+                        subtractRegXFromRexY((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                        break;
+                    case 0xE: //8xyE
+                        shiftLeft((instruction & 0x0F00) >> 8);
+                        break;
+                }
+                break;
+            case 0x9: //9xy0
+                skipIfNotEqualRegister((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                break;
+            case 0xA: //Annn
+                setIndexRegister(instruction & 0x0FFF);
+                break;
+            case 0xB: //Bnnn
+                jumpToAddressPlusV0(instruction & 0x0FFF);
+                break;
+            case 0xC: //Cxkk
+                randomValue((instruction & 0x0F00) >> 8, (instruction & 0x00FF));
+                break;
+            case 0xD: //Dxyn
+                drawSprite((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4, instruction & 0x000F);
+                break;
+            case 0xE:
+                if ((instruction & 0x00FF) == 0x9E) skipIfKeyPressed((instruction & 0x0F00) >> 8); //Ex9E
+                else skipIfNotKeyPressed((instruction & 0x0F00) >> 8 ); //ExA1
+                break;
+            case 0XF:
+                switch (instruction & 0x00FF){
+                    case 0x07: //0xFx07
+                        loadDelayTimerToRegister((instruction & 0x0F00) >> 8);
+                        break;
+                    case 0x0A: //0xFx0A
+                        loadKeyPressToRegister((instruction & 0x0F00) >> 8);
+                        break;
+                    case 0x15: //0xFx15
+                        loadRegisterToDelayTimer((instruction & 0x0F00) >> 8);
+                        break;
+                    case 0x18: //0xFx18
+                        loadRegisterToSoundTimer((instruction & 0x0F00) >> 8);
+                        break;
+                    case 0x1E: //0xFx1E
+                        addToIndexRegister((instruction & 0x0F00) >> 8);
+                        break;
+                    case 0x29: //0xFx29
+                        setIndexRegisterToSprite((instruction & 0x0F00) >> 8);
+                        break;
+                    case 0x33: //0xFx33
+                        loadDecimalNumberToIndexRegister((instruction & 0x0F00) >> 8);
+                        break;
+                    case 0x55: //0xFx55
+                        storeRegistersInMemory((instruction & 0x0F00) >> 8);
+                        break;
+                    case 0x65: //0xFx65
+                        readRegistersFromMemory((instruction & 0x0F00) >> 8);
+                        break;
+                }
+        }
+    }
     /**
      * Clears the display
      */
