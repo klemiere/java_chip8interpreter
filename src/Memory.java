@@ -28,6 +28,10 @@ public class Memory {
         }
     }
 
+    public int[] getRam(){
+        return ram;
+    }
+
     public int read(int address){
         return ram[address];
     }
