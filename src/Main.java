@@ -6,8 +6,6 @@ public class Main {
         // to see how IntelliJ IDEA suggests fixing it.
         Memory ram = new Memory("test_roms/1-chip8-logo.ch8");
 
-        for(int i = 0x200; i <= 0xFFF; i++){
-            System.out.println("Address: 0x" + Integer.toHexString(i) + " Value: " + ram.read(i));
+        new Emuframe();
         }
     }
-}
