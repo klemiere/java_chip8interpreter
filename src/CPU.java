@@ -1,12 +1,47 @@
+import java.util.Timer;
+
 public class CPU {
 
-    public static final double CYCLE = 1.0/60;
-    int[] V = new int[16]; // General purpose registers
-    int I, DT, ST; // Index, Delay Timer and Sound Timer registers
-    int PC = 0x200; // Program Counter
+    private static final double CYCLE = 1000.0/60; //length of a cycle in millis
+    private int[] V; // General purpose registers
+    private int I, DT, ST; // Index, Delay Timer and Sound Timer registers
+    private int PC; // Program Counter
+
+    private Timer timer;
+    long lastCycleTime = System.currentTimeMillis();
+
+    private final Display display;
+    private final Memory memory;
 
 
-    CPU(){}
+    CPU(Display display, Memory memory){
+        int cycleCount = 0;
+        int byteCount = 512;
+
+        this.display = display;
+        this.memory = memory;
+        this.timer = new Timer();
+        this.PC = 0x200;
+        this.V = new int[16];
+
+    }
+
+    public void run(){
+        int[] ram = memory.getRam();
+        while (true){
+            long currentTime = System.currentTimeMillis();
+            long elapsedTime = currentTime - lastCycleTime;
+
+            if (elapsedTime >= CYCLE){
+                int highByte = ram[PC] & 0xFF;
+                int lowByte = ram[PC + 1] & 0xFF;
+                int opcode = (highByte << 8) | lowByte;
+                instruction(opcode);
+                PC += 2;
+                lastCycleTime = currentTime;
+            }
+        }
+    }
 
     public void instruction(int instruction){
         int opcode = (instruction & 0xF000) >> 12;
@@ -123,7 +158,7 @@ public class CPU {
      * Clears the display
      */
     public void clearScreen(){
-
+        display.clear();
     }
 
     /**
@@ -139,7 +174,7 @@ public class CPU {
      * @param address The address (nnn) to jump to.
      */
     public void jumpToAddress(int address){
-
+        PC = address -2; //hacky but I can't be bothered rewriting my opcode handler right now
     }
 
     /**
@@ -208,7 +243,7 @@ public class CPU {
      * @param value The value to store in register Vx
      */
     public void setValueInRegister(int regX, int value){
-
+        V[regX] = value;
     }
 
     /**
@@ -321,7 +356,7 @@ public class CPU {
      * @param address The address to put into the index register
      */
     public void setIndexRegister(int address){
-
+        I = address;
     }
 
     /**
@@ -343,7 +378,24 @@ public class CPU {
      * @param height The height of the sprites (from memory starting at I)
      */
     public void drawSprite(int regX, int regY, int height){
-
+        V[15] = 0;
+        regX = V[regX];
+        regY = V[regY];
+        int[] lines = new int[height];
+        for (int n = 0; n < height; n++){
+            lines[n] = memory.read(I+n);
+        }
+        for (int row = 0; row < lines.length; row++){
+            int y = (regY + row);
+            for (int column = 0; column < 8; column++){
+                int x = (regX + column);
+                int mask = 1 << (7 - column);
+                if ((lines[row] & mask) != 0){
+                    if (display.flipPixel(x, y)) V[15] = 1;
+                }
+            }
+        }
+        display.repaint();
     }
 
     /**
