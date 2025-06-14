@@ -148,7 +148,7 @@ public class CPU {
                         setIndexRegisterToSprite((instruction & 0x0F00) >> 8);
                         break;
                     case 0x33: //0xFx33
-                        loadDecimalNumberToIndexRegister((instruction & 0x0F00) >> 8);
+                        storeBCD((instruction & 0x0F00) >> 8);
                         break;
                     case 0x55: //0xFx55
                         storeRegistersInMemory((instruction & 0x0F00) >> 8);
@@ -493,11 +493,14 @@ public class CPU {
     }
 
     /**
-     * Stores BCD representation of the value in regX into register I for the hundreds,
+     * Stores BCD representation of the value in regX into memory starting at address I for the hundreds,
      * I+1 for the tens and I+2 for the ones.
      * @param regX The index of Vx (0-15)
      */
-    public void loadDecimalNumberToIndexRegister(int regX){
+    public void storeBCD(int regX){
+        ram[I] = V[regX] / 100;
+        ram[I+1] = (V[regX] / 10) % 10;
+        ram[I+2] = V[regX] % 10;
 
     }
 
