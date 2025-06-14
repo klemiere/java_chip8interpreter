@@ -479,7 +479,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void addToIndexRegister(int regX){
-
+        I += V[regX];
     }
 
     /**
