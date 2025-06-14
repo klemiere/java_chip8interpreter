@@ -14,6 +14,7 @@ public class CPU {
 
     private final Display display;
     private final Memory memory;
+    private int[] ram;
 
 
     CPU(Display display, Memory memory){
@@ -22,6 +23,7 @@ public class CPU {
 
         this.display = display;
         this.memory = memory;
+        this.ram = this.memory.getRam();
         this.timer = new Timer();
         this.PC = 0x200;
         this.V = new int[16];
@@ -31,7 +33,6 @@ public class CPU {
     }
 
     public void run(){
-        int[] ram = memory.getRam();
         while (true){
             long currentTime = System.currentTimeMillis();
             long elapsedTime = currentTime - lastCycleTime;
@@ -356,7 +357,8 @@ public class CPU {
      * @param regX The index of register Vx (0-15)
      */
     public void shiftRight(int regX){
-
+        V[15] = V[regX] & 1;
+        V[regX] >>= 1;
     }
 
     /**
@@ -366,7 +368,8 @@ public class CPU {
      * @param regX The index of register Vx (0-15)
      */
     public void shiftLeft(int regX){
-
+        V[15] = (V[regX] >> 7) & 1;
+        V[regX] = (V[regX] << 1) & 0xFF;
     }
 
     /**
@@ -504,7 +507,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void storeRegistersInMemory(int regX){
-
+        System.arraycopy(V, 0, ram, I, regX + 1);
     }
 
     /**
@@ -513,7 +516,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void readRegistersFromMemory(int regX){
-
+        System.arraycopy(ram, I, V, 0, regX + 1);
     }
 
 }
