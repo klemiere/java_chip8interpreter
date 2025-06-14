@@ -3,8 +3,8 @@ import java.awt.*;
 
 public class Display extends JPanel {
 
-    public static final int HEIGHT = 64;
-    public static final int WIDTH = 32;
+    public static final int HEIGHT = 32;
+    public static final int WIDTH = 64;
     public static final int SCALE = 10; //Scale multiplier for the pixels
 
     private boolean display[][] = new boolean[WIDTH][HEIGHT];
@@ -29,15 +29,14 @@ public class Display extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g); // clear background
+        super.paintComponent(g);
 
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
                 if (display[x][y]) {
                     g.setColor(Color.WHITE);
                     g.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
                 }
-                // else: skip or paint background (already cleared)
             }
         }
     }
