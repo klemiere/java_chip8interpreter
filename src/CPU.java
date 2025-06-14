@@ -82,7 +82,7 @@ public class CPU {
                         loadRegister((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
                         break;
                     case 0x1: //8xy1
-                        bitwiseXOR((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                        bitwiseOR((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
                         break;
                     case 0x2: //8xy2
                         bitwiseAND((instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
@@ -284,7 +284,7 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void bitwiseOR(int regX, int regY){
-        
+        V[regX] |= V[regY];
     }
 
     /**
@@ -294,7 +294,7 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void bitwiseAND(int regX, int regY){
-
+        V[regX] &= V[regY];
     }
 
     /**
@@ -304,7 +304,7 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void bitwiseXOR(int regX, int regY){
-
+        V[regX] ^= V[regY];
     }
 
     /**
