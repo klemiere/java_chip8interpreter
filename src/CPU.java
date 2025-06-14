@@ -316,7 +316,13 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void addRegisters(int regX, int regY){
-
+        V[15] = 0;
+        int result = V[regX] + V[regY];
+        if (result > 255){
+            V[15] = 1;
+            result = result & 0x00FF;
+        }
+        V[regX] = result;
     }
 
     /**
