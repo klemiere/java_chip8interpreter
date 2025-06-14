@@ -2,10 +2,14 @@
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        Memory ram = new Memory("test_roms/1-chip8-logo.ch8");
 
-        new Emuframe();
+        Display display = new Display();
+        Memory memory = new Memory("test_roms/1-chip8-logo.ch8");
+        CPU cpu = new CPU(display, memory);
+
+        new Emuframe(display);
+        cpu.run();
         }
+
+
     }
