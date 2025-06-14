@@ -26,7 +26,7 @@ public class CPU {
         this.PC = 0x200;
         this.V = new int[16];
         this.stack = new int[16];
-        this.SP = 0;
+        this.SP = -1;
 
     }
 
@@ -169,7 +169,8 @@ public class CPU {
      * Sets the program counter to the address at the top of the stack, then subtracts 1 from stack pointer
      */
     public void returnFromSubroutine(){
-
+        PC = stack[SP];
+        SP--;
     }
 
     /**
@@ -197,7 +198,9 @@ public class CPU {
      * @param address The address (nnn) to call the subroutine on
      */
     public void callSubroutineAtAddress(int address){
-
+        SP++;
+        stack[SP] = PC;
+        PC = address -2; //still hacky
     }
 
     /**
