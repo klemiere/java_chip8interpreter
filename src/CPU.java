@@ -253,7 +253,7 @@ public class CPU {
      * @param value The value to add
      */
     public void addToValueInRegister(int regX, int value){
-
+        V[regX] += value;
     }
 
     /**
