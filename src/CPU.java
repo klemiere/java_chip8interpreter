@@ -320,7 +320,7 @@ public class CPU {
         int result = V[regX] + V[regY];
         if (result > 255){
             V[15] = 1;
-            result = result & 0x00FF;
+            result = result & 0xFF;
         }
         V[regX] = result;
     }
@@ -333,7 +333,8 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void subtractRegYFromRegX(int regX, int regY){
-
+        V[15] = (V[regX] > V[regY]) ? 1 : 0;
+        V[regX] = (V[regX] -V[regY]) & 0xFF;
     }
 
     /**
