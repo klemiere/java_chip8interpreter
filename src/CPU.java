@@ -203,7 +203,9 @@ public class CPU {
      * @param value The value to compare to
      */
     public void skipIfEqualImmediate(int regX, int value){
-
+        if (V[regX] == value){
+            PC += 2;
+        }
     }
 
     /**
@@ -213,7 +215,9 @@ public class CPU {
      * @param value The value to compare to
      */
     public void skipIfNotEqualImmediate(int regX, int value){
-
+        if (V[regX] != value){
+            PC += 2;
+        }
     }
 
     /**
