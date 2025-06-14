@@ -345,7 +345,8 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void subtractRegXFromRexY(int regX, int regY){
-
+        V[15] = (V[regY] > V[regX]) ? 1 : 0;
+        V[regX] = (V[regY] -V[regX]) & 0xFF;
     }
 
     /**
