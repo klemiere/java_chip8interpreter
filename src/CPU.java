@@ -274,7 +274,7 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void loadRegister(int regX, int regY){
-
+        V[regX] = V[regY];
     }
 
     /**
@@ -284,7 +284,7 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void bitwiseOR(int regX, int regY){
-
+        
     }
 
     /**
