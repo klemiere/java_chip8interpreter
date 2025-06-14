@@ -3,7 +3,8 @@ import java.util.Timer;
 public class CPU {
 
     private static final double CYCLE = 1000.0/60; //length of a cycle in millis
-    private int[] V; // General purpose registers
+    private int[] V;// General purpose registers
+    private int[] stack;
     private int I, DT, ST; // Index, Delay Timer and Sound Timer registers
     private int PC; // Program Counter
 
@@ -23,6 +24,7 @@ public class CPU {
         this.timer = new Timer();
         this.PC = 0x200;
         this.V = new int[16];
+        this.stack = new int[16];
 
     }
 
