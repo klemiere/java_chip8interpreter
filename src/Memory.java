@@ -19,8 +19,9 @@ public class Memory {
         try {
             InputStream inputStream = new FileInputStream(romPath);
             int byteCount = 512; //assume the rom starts at 0x200
-            while(inputStream.read() != -1){
-                write(byteCount, inputStream.read());
+            int nextByte;
+            while((nextByte = inputStream.read()) != -1){
+                write(byteCount, nextByte);
                 byteCount++;
             }
         } catch (IOException e){
