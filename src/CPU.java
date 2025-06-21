@@ -13,18 +13,20 @@ public class CPU {
 
     private final Display display;
     private final Memory memory;
+    private final Keyboard keyboard;
 
 
-    CPU(Display display, Memory memory){
+    CPU(Display display, Keyboard keyboard, Memory memory){
         int cycleCount = 0;
         int byteCount = 512;
 
         this.display = display;
         this.memory = memory;
+        this.keyboard = keyboard;
         this.timer = new Timer();
         this.PC = 0x200;
         this.V = new int[16];
-        this.SP = -1;
+        this.SP = 0;
 
     }
 
@@ -423,7 +425,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void skipIfKeyPressed(int regX){
-
+        if (keyboard.isKeyPressed(V[regX])) PC += 2;
     }
 
     /**
@@ -432,7 +434,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void skipIfNotKeyPressed(int regX){
-
+        if (!keyboard.isKeyPressed(V[regX])) PC += 2;
     }
 
     /**
@@ -449,7 +451,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void loadRegisterToDelayTimer(int regX){
-        DT = V[regX]
+        DT = V[regX];
     }
 
     /**
@@ -458,7 +460,13 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void loadKeyPressToRegister(int regX){
-
+        for (int i = 0; i <= 15; i++){
+            if (keyboard.isKeyPressed(i)){
+                V[regX] = i;
+                return;
+            };
+        }
+        PC -= 2;
     }
 
     /**
