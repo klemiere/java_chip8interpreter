@@ -2,14 +2,18 @@ import java.util.Timer;
 
 public class CPU {
 
-    private static final double CYCLE = 1000.0/60; //length of a cycle in millis
+    private static final int CPU_HZ = 500;
+    private static final int TIMER_HZ = 60;
+    private static final double CPU_CYCLE = 1_000_000_000L / CPU_HZ; //nanoseconds per cycle
+    private static final double TIMER_TICK = 1_000_000_000L / TIMER_HZ; //nanoseconds per tick
     private int[] V;// General purpose registers
     private int SP; // Stack Pointer
     private int I, DT, ST; // Index, Delay Timer and Sound Timer registers
     private int PC; // Program Counter
 
     private Timer timer;
-    long lastCycleTime = System.currentTimeMillis();
+    double lastCpuTime = System.nanoTime();
+    double lastTimerTime = lastCpuTime;
 
     private final Display display;
     private final Memory memory;
@@ -32,16 +36,27 @@ public class CPU {
 
     public void run(){
         while (true){
-            long currentTime = System.currentTimeMillis();
-            long elapsedTime = currentTime - lastCycleTime;
+            long currentTime = System.nanoTime();
 
-            if (elapsedTime >= CYCLE){
+            if (currentTime - lastCpuTime >= CPU_CYCLE){
                 int highByte = memory.readRam(PC) & 0xFF;
                 int lowByte = memory.readRam(PC+1) & 0xFF;
                 int opcode = (highByte << 8) | lowByte;
                 instruction(opcode);
+                System.out.println("Current opcode: " + opcode);
                 PC += 2;
-                lastCycleTime = currentTime;
+                lastCpuTime += CPU_CYCLE;
+            }
+
+            if (currentTime - lastTimerTime >= TIMER_TICK){
+                if (DT > 0) DT--;
+                if (ST > 0) ST--;
+                lastTimerTime += TIMER_TICK;
+            }
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
