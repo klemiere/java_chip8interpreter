@@ -4,10 +4,11 @@ public class Main {
     public static void main(String[] args) {
 
         Display display = new Display();
-        Memory memory = new Memory("test_roms/1-chip8-logo.ch8");
-        CPU cpu = new CPU(display, memory);
+        Keyboard keyboard = new Keyboard();
+        Memory memory = new Memory("test_roms/5-quirks.ch8");
+        CPU cpu = new CPU(display, keyboard, memory);
 
-        new Emuframe(display);
+        new Emuframe(display, keyboard);
         cpu.run();
         }
 
