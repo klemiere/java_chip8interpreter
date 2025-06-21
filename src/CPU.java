@@ -4,7 +4,6 @@ public class CPU {
 
     private static final double CYCLE = 1000.0/60; //length of a cycle in millis
     private int[] V;// General purpose registers
-    private int[] stack;
     private int SP; // Stack Pointer
     private int I, DT, ST; // Index, Delay Timer and Sound Timer registers
     private int PC; // Program Counter
@@ -27,7 +26,6 @@ public class CPU {
         this.timer = new Timer();
         this.PC = 0x200;
         this.V = new int[16];
-        this.stack = new int[16];
         this.SP = -1;
 
     }
@@ -170,7 +168,7 @@ public class CPU {
      * Sets the program counter to the address at the top of the stack, then subtracts 1 from stack pointer
      */
     public void returnFromSubroutine(){
-        PC = stack[SP];
+        PC = memory.readStack(SP);
         SP--;
     }
 
@@ -200,7 +198,7 @@ public class CPU {
      */
     public void callSubroutineAtAddress(int address){
         SP++;
-        stack[SP] = PC;
+        memory.writeStack(SP, PC);
         PC = address -2; //still hacky
     }
 
@@ -405,7 +403,7 @@ public class CPU {
         regY = V[regY];
         int[] lines = new int[height];
         for (int n = 0; n < height; n++){
-            lines[n] = memory.read(I+n);
+            lines[n] = memory.readRam(I+n);
         }
         for (int row = 0; row < lines.length; row++){
             int y = (regY + row);

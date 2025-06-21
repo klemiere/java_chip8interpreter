@@ -8,6 +8,7 @@ public class Memory {
     roms typically start at 0x200, 0x600 is also possible
      */
     private final int[] ram = new int[4096];
+    private final int[] stack = new int[16];
     String romPath;
 
     Memory(String romPath){
@@ -21,7 +22,7 @@ public class Memory {
             int byteCount = 512; //assume the rom starts at 0x200
             int nextByte;
             while((nextByte = inputStream.read()) != -1){
-                write(byteCount, nextByte);
+                writeRam(byteCount, nextByte);
                 byteCount++;
             }
         } catch (IOException e){
@@ -33,11 +34,15 @@ public class Memory {
         return ram;
     }
 
-    public int read(int address){
+    public int readStack(int address) {return stack[address];}
+
+    public void writeStack(int address, int value) { stack[address] = value;}
+
+    public int readRam(int address){
         return ram[address];
     }
 
-    public void write(int address, int value){
+    public void writeRam(int address, int value){
         ram[address] = value;
     }
 }
