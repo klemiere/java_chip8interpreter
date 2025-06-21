@@ -231,7 +231,7 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void skipIfEqualRegister(int regX, int regY){
-
+        if (V[regX] == V[regY]) PC += 4;
     }
 
     /**
@@ -241,7 +241,7 @@ public class CPU {
      * @param regY The index of register Vy (0-15)
      */
     public void skipIfNotEqualRegister(int regX, int regY){
-
+        if (V[regX] != V[regY]) PC += 4;
     }
 
     /**
@@ -385,7 +385,8 @@ public class CPU {
      * @param value The value to bitwise AND with a random number
      */
     public void randomValue(int regX, int value){
-
+        int randomNum = (int)(Math.random() * 256);
+        V[regX] = randomNum & value;
     }
 
     /**
@@ -440,7 +441,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void loadDelayTimerToRegister(int regX){
-
+        V[regX] = DT;
     }
 
     /**
@@ -448,7 +449,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void loadRegisterToDelayTimer(int regX){
-
+        DT = V[regX]
     }
 
     /**
@@ -466,7 +467,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void loadRegisterToSoundTimer(int regX){
-
+        ST = V[regX];
     }
 
     /**
@@ -479,13 +480,13 @@ public class CPU {
     }
 
     /**
-     * Sets the index register I to the memory location for the sprite of the value in register Vx.
+     * Sets the index register I to the memory location for the hexadecimal sprite of the value in register Vx.
      * The sprite corresponding to the value in Vx is located at the address for the hexadecimal sprite (0x50 to 0xA0).
      *
      * @param regX The index of Vx (0-15)
      */
     public void setIndexRegisterToSprite(int regX){
-
+        I = V[regX] * 5;
     }
 
     /**
