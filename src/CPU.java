@@ -505,7 +505,9 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void storeRegistersInMemory(int regX){
-        //System.arraycopy(V, 0, ram, I, regX + 1);
+        for (int i = 0; i <= regX; i++){
+            memory.writeRam(I + i, V[i]);
+        }
     }
 
     /**
@@ -514,7 +516,9 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void readRegistersFromMemory(int regX){
-        //System.arraycopy(ram, I, V, 0, regX + 1);
+        for (int i = 0; i <= regX; i++){
+            V[i] = memory.readRam(I + i);
+        }
     }
 
 }
