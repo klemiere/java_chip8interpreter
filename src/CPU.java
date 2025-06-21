@@ -13,7 +13,6 @@ public class CPU {
 
     private final Display display;
     private final Memory memory;
-    private int[] ram;
 
 
     CPU(Display display, Memory memory){
@@ -22,7 +21,6 @@ public class CPU {
 
         this.display = display;
         this.memory = memory;
-        this.ram = this.memory.getRam();
         this.timer = new Timer();
         this.PC = 0x200;
         this.V = new int[16];
@@ -36,8 +34,8 @@ public class CPU {
             long elapsedTime = currentTime - lastCycleTime;
 
             if (elapsedTime >= CYCLE){
-                int highByte = ram[PC] & 0xFF;
-                int lowByte = ram[PC + 1] & 0xFF;
+                int highByte = memory.readRam(PC) & 0xFF;
+                int lowByte = memory.readRam(PC+1) & 0xFF;
                 int opcode = (highByte << 8) | lowByte;
                 instruction(opcode);
                 PC += 2;
@@ -496,10 +494,9 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void storeBCD(int regX){
-        ram[I] = V[regX] / 100;
-        ram[I+1] = (V[regX] / 10) % 10;
-        ram[I+2] = V[regX] % 10;
-
+        memory.writeRam(I, (V[regX] / 100));
+        memory.writeRam(I+1, ((V[regX] / 10) % 10));
+        memory.writeRam(I+2, (V[regX] % 10));
     }
 
     /**
@@ -508,7 +505,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void storeRegistersInMemory(int regX){
-        System.arraycopy(V, 0, ram, I, regX + 1);
+        //System.arraycopy(V, 0, ram, I, regX + 1);
     }
 
     /**
@@ -517,7 +514,7 @@ public class CPU {
      * @param regX The index of Vx (0-15)
      */
     public void readRegistersFromMemory(int regX){
-        System.arraycopy(ram, I, V, 0, regX + 1);
+        //System.arraycopy(ram, I, V, 0, regX + 1);
     }
 
 }

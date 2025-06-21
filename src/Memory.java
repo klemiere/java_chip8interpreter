@@ -30,10 +30,6 @@ public class Memory {
         }
     }
 
-    public int[] getRam(){
-        return ram;
-    }
-
     public int readStack(int address) {return stack[address];}
 
     public void writeStack(int address, int value) { stack[address] = value;}
